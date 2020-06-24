@@ -1,0 +1,9 @@
+.clearfix:after{
+  display: block;
+  content: '';
+  visibility: hidden;
+  clear: both;
+}
+.fl{ float:left;}
+.fr{ float:right;}
+p{ margin: 0; padding: 0;}

@@ -411,6 +411,31 @@ export default {
         .get('/rw/tenday/' + this.code)
         .then(res => {
           var data = res.data
+
+          var etWater = data.rsvrlist[9].val
+          var stWater = this.infoData.realtime.val
+
+          if (stWater > etWater) {
+            this.tenWater =
+              " <span class='gray'>水位:</span><span >↑ </span>" +
+              '<span ><b>' +
+              Math.abs(etWater - stWater).toFixed(2) +
+              '</b> m' +
+              '</span>'
+          } else if (stWater == etWater) {
+            this.tenWater =
+              '<span class="gray">水位:</span><b>' +
+              Math.abs(etWater - stWater).toFixed(2) +
+              '</b> m'
+          } else {
+            this.tenWater =
+              "<span class='gray'>水位:</span><span style='color:#159F8E; ' >↓</span>" +
+              "<span style='color:#159F8E;' ><b>" +
+              Math.abs(etWater - stWater).toFixed(2) +
+              '</b> m' +
+              '</span>'
+          }
+
           var tableHtml =
             '<tr><td>实时</td><td>' +
             this.numFilter(this.infoData.realtime.rain, 1) +
@@ -518,6 +543,7 @@ export default {
             sumRain += element.valrain
           }
         })
+
         this.tenRain = sumRain.toFixed(1)
         // 基于准备好的dom，初始化echarts实例
         let myChart = this.$echarts.init(document.getElementById('myChart'))
@@ -610,28 +636,6 @@ export default {
           rsvrs = [],
           minMaxRsvr = []
         var data = res.data.result
-        var etWater = data[0].val,
-          stWater = res.data.lastval
-        if (stWater > etWater) {
-          this.tenWater =
-            " <span class='gray'>水位:</span><span >↑ </span>" +
-            '<span ><b>' +
-            Math.abs(etWater - stWater).toFixed(2) +
-            '</b> m' +
-            '</span>'
-        } else if (stWater == etWater) {
-          this.tenWater =
-            '<span class="gray">水位:</span><b>' +
-            Math.abs(etWater - stWater).toFixed(2) +
-            '</b> m'
-        } else {
-          this.tenWater =
-            "<span class='gray'>水位:</span><span style='color:#159F8E; display:block' class='fl'>↓</span>" +
-            "<span style='display:block' class='fl'><b>" +
-            Math.abs(etWater - stWater).toFixed(2) +
-            '</b> m' +
-            '</span>'
-        }
 
         data.forEach(element => {
           tms.push(element.tm)
@@ -683,7 +687,7 @@ export default {
               },
               data: tms,
               axisLabel: {
-                interval: 40, // 自定义显示X轴坐标显示间隔
+                interval: 48, // 自定义显示X轴坐标显示间隔
                 //rotate: 45,
                 textStyle: {
                   color: '#333',
